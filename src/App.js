@@ -14,21 +14,19 @@ function App() {
       setError("Please enter a city name");
       return;
     }
-
+  
     setError(null);
     setWeather(null);
     setLoading(true);
-
+  
     try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
-      );
+      const response = await fetch(`http://localhost:5000/weather?city=${city}`);
       const data = await response.json();
-
-      if (data.cod === '404') {
-        setError('City not found');
-      } else {
+  
+      if (response.ok) {
         setWeather(data);
+      } else {
+        setError(data.error || 'Failed to fetch weather data');
       }
     } catch (error) {
       setError('Failed to fetch weather data');
@@ -36,7 +34,7 @@ function App() {
       setLoading(false);
     }
   };
-
+  
   const handleInputChange = (e) => {
     setCity(e.target.value);
   };
