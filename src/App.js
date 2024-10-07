@@ -7,8 +7,6 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const apiKey = 'cc3e24b383e7820eb138c83623fc9bcf'; // Replace with your actual API key
-
   const fetchWeather = async () => {
     if (!city) {
       setError("Please enter a city name");
@@ -20,7 +18,7 @@ function App() {
     setLoading(true);
   
     try {
-      const response = await fetch(`http://localhost:5000/weather?city=${city}`);
+      const response = await fetch(`/api/weather?city=${city}`);
       const data = await response.json();
   
       if (response.ok) {
@@ -48,8 +46,9 @@ function App() {
           value={city}
           onChange={handleInputChange}
           placeholder="Enter city name"
+          style={{ padding: '10px', marginRight: '10px' }}
         />
-        <button onClick={fetchWeather}>Get Weather</button>
+        <button onClick={fetchWeather} style={{ padding: '10px' }}>Get Weather</button>
       </div>
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -58,7 +57,7 @@ function App() {
           <h2>
             {weather.name}, {weather.sys?.country || 'Unknown Country'}
           </h2>
-          <p>Temperature: {weather.main?.temp || 'N/A'}°C</p>
+          <p>Temperature: {(weather.main?.temp - 273.15).toFixed(2) || 'N/A'}°C</p>
           <p>Weather: {weather.weather?.[0]?.description || 'N/A'}</p>
           <p>Humidity: {weather.main?.humidity || 'N/A'}%</p>
           <p>Wind Speed: {weather.wind?.speed || 'N/A'} m/s</p>
